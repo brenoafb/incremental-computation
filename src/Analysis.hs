@@ -12,6 +12,7 @@ import Control.Monad.Memo
 import Control.Monad.Identity
 
 import Syntax
+import Rdg
 
 countNumericLiterals :: Stmt -> Int
 countNumericLiterals p =
@@ -122,3 +123,26 @@ evalExpr = evalAll . mCountNumericLiteralsExpr
 
 runStmt = runAll . mCountNumericLiterals
 runExpr = runAll . mCountNumericLiteralsExpr
+
+tokenCount :: [Int] -> Int
+tokenCount [] = 0
+tokenCount (x:xs) =
+  if x == 0
+  then tokenCount xs
+  else 1 + tokenCount xs
+
+-- mtokenCount :: Monad m => [Int] -> m Int
+mtokenCount [] = pure 0
+mtokenCount (x:xs) =
+  if x == 0
+  then memo mtokenCount xs
+  else do
+    ns <- memo mtokenCount xs
+    pure (1 + ns)
+
+rdgTokenCount :: [Int] -> Rdg Int
+rdgTokenCount [] = Rdg 0 Nothing (+) []
+rdgTokenCount (x:xs) =
+  if x == 0
+  then Rdg 0 Nothing (+) [rdgTokenCount xs]
+  else Rdg 1 Nothing (+) [rdgTokenCount xs]

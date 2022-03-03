@@ -31,3 +31,22 @@ interpreter fp = do
 
 usage :: IO ()
 usage = putStrLn "usage: imperative [-c] <file>"
+
+
+xs = [1,0,2,0,3,4]
+
+rdgBeforePropagation = rdgTokenCount xs
+
+rdgAfterPropagation = propagateRdg rdg
+
+resultBeforeChange = executeRdg rdgAfterPropagation
+
+mptr = mkMPtr xs rdgAfterPropagation
+
+mptrAtChangeLocation = mchange 0 (mforward $ mforward mptr)
+
+(xs', rdgAfterChange) = mrewind mptrAtChangeLocation
+
+rdgPropagatedAfterChange = propagateRdg rdgAfterChange
+
+resultAfterChange = executeRdg rdgAfterChange

@@ -29,6 +29,9 @@ library
       Interpreter
       Lib
       Parser
+      Ptr
+      Rdg
+      RdgZipper
       Syntax
   other-modules:
       Paths_incremental_computation
